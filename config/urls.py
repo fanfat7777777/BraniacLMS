@@ -13,9 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# from xml.etree.ElementInclude import include
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+
+# Подключаем редирект, что бы при обращении к основному адресу,
+# перенаправляло на нужный адрес
+from django.views.generic import RedirectView
+
+#   Список путей, которые будут доступны в проекте.
+#   При их идентичности, используется первый.
+#       (Адрес, Контроллер)
+#   Контроллер содержится в модуле views.py
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    # Подключаем редирект
+    path("", RedirectView.as_view(url="mainapp/")),
+    # импортируем include
+    # С помощью include, по пути mainapp мы указываем какие адреса
+    # из какого приложения мы включаем в рамках нашего модуля
+    # "Папка.Файл" - не указание пути а обращение к внутреннему пакету
+    path("mainapp/", include("mainapp.urls")),
 ]
